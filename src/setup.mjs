@@ -1,13 +1,15 @@
 export function setup({onInterfaceReady, settings})
 {
-	const statDisplay 	= settings.section('Display Stats (Need reload)');
+	const statDisplay 	= settings.section("DISPLAY");
+	const extraDisplay  = settings.section("EXTRA");
+
 	const statList 		= {
 		timesseen: {
 			 type 		: 'switch',
 			 label 		: 'Times Encountered',
 			 hint 		: 'Displays how many times you have encountered the current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/old_spyglass.png"),
+			 resource 	: assets.getURI("assets/media/skills/prayer/eagle_eye.svg"),
 			 id 		: 8,
 			 title 		: "timesseen",
 			 value 		: '-'
@@ -27,7 +29,7 @@ export function setup({onInterfaceReady, settings})
 			 label 		: 'Killed By',
 			 hint 		: 'Displays how many times you have died to the current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/skull.png"),
+			 resource 	: assets.getURI("assets/media/skills/combat/death.svg"),
 			 id 		: 3,
 			 title 		: "killedby",
 			 value 		: '-'
@@ -37,7 +39,7 @@ export function setup({onInterfaceReady, settings})
 			 label 		: 'Damage Dealt',
 			 hint 		: 'Displays total damage dealt for current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/Unholy_2H_Sword.png"),
+			 resource 	: assets.getURI("assets/media/status/attack_increase.svg"),
 			 id 		: 1,
 			 title 		: "dmgdealt",
 			 value 		: '-'
@@ -47,7 +49,7 @@ export function setup({onInterfaceReady, settings})
 			label 		: 'Successful Hits',
 			hint 		: 'Displays total number of successful hits on current enemy',
 			default 	: true,
-			resource 	: assets.getURI("assets/media/bank/summoning_shard_green.png"),
+			resource 	: assets.getURI("assets/media/status/evasion_increase.svg"),
 			id 			: 5,
 			title 		: "hitssuccess",
 			value 		: '-'
@@ -57,7 +59,7 @@ export function setup({onInterfaceReady, settings})
 		label 			: 'Hits Missed',
 		hint 			: 'Displays total number of missed hits on current enemy',
 		default 		: true,
-		resource 		: assets.getURI("assets/media/bank/summoning_shard_gold.png"),
+		resource 		: assets.getURI("assets/media/status/null.svg"),
 		id 				: 7,
 		title 			: "hitsmissed",
 		value 			: '-'
@@ -67,7 +69,7 @@ export function setup({onInterfaceReady, settings})
 			 label 		: 'Damage Taken',
 			 hint 		: 'Displays total damage taken from current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/Consuming_Shield.png"),
+			 resource 	: assets.getURI("assets/media/status/attack_decrease.svg"),
 			 id 		: 0,
 			 title 		: "dmgtaken",
 			 value 		: '-'
@@ -77,7 +79,7 @@ export function setup({onInterfaceReady, settings})
 			 label 		: 'Hits Taken',
 			 hint 		: 'Displays total number of hits taken from current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/summoning_shard_red.png"),
+			 resource 	: assets.getURI("assets/media/status/evasion_decrease.svg"),
 			 id 		: 4,
 			 title 		:"hitstaken" ,
 			 value 		: '-'
@@ -87,7 +89,7 @@ export function setup({onInterfaceReady, settings})
 			 label 		: 'Hits Dodged',
 			 hint 		: 'Displays total number of hits dodged from current enemy',
 			 default 	: true,
-			 resource 	: assets.getURI("assets/media/bank/summoning_shard_blue.png"),
+			 resource 	: assets.getURI("assets/media/skills/prayer/grace.svg"),
 			 id 		: 6,
 			 title 		: "hitsdodged",
 			 value 		: '-'
@@ -103,27 +105,53 @@ export function setup({onInterfaceReady, settings})
 			 value 		: '-'
 		}};
 
-	// Initialize settings
-	for(const [key, stat] of Object.entries(statList)){
-		statDisplay.add({
-				type	: stat.type,
-				name	: stat.title,
-				label	: stat.label,
-				hint	: stat.hint,
-				default	: true
-		});
+	const extraList		= {
+		totalaccuracy: {
+			type 		: 'switch',
+			label 		: 'Total Accuracy',
+			hint 		: 'Calculates and displays your total accuracy against the enemy',
+			default 	: true,
+			resource 	: assets.getURI("assets/media/skills/prayer/chivalry.svg"),
+			title 		: "totalaccuracy",
+			value 		: '-'
+	   },
+	   totalevasion: {
+			type 		: 'switch',
+			label 		: 'Total Evasion',
+			hint 		: 'Calculates and displays your total evasion against the enemy',
+			default 	: true,
+			resource 	: assets.getURI("assets/media/skills/prayer/elusivity.svg"),
+			title 		: "totalevasion",
+			value 		: '-'
+   		},
+		kdratio: {
+			type 		: 'switch',
+			label 		: 'K/D Ratio',
+			hint 		: 'Calculates and displays your total Kills / Deaths ratio against the enemy',
+			default 	: true,
+			resource 	: assets.getURI("assets/media/skills/prayer/battleborn.svg"),
+			title 		: "kdratio",
+			value 		: '-'
+		}
 	}
+
+	psy_generateSettings(statList, statDisplay);
+	psy_generateSettings(extraList, extraDisplay);
 
 	onInterfaceReady(ctx => {
 		const enemyContainer 	= document.getElementById("combat-enemy-levels").parentNode;
 		const enemyInfo 		= PsyEnemyInfoStats({stats: statList, settings: statDisplay})
+		const enemyExtra 		= PsyEnemyInfoExtras({extras: extraList, settings: extraDisplay})
 
 		ui.create(enemyInfo, enemyContainer);
+		ui.create(enemyExtra, enemyContainer )
 		enemyInfo.addImgTooltip();
+		enemyExtra.addImgTooltip();
 
 		ctx.patch(Enemy, "renderImageAndName").after(function() {
 			if(this.state === EnemyState.Alive){
 				enemyInfo.refresh(this.monster);
+				enemyExtra.refresh(this.monster);
 			}
 		})
 
@@ -136,11 +164,15 @@ export function setup({onInterfaceReady, settings})
 				enemyInfo.refreshStat(this.monster, "dmgtaken");
 				enemyInfo.refreshStat(this.monster, "hitstaken");
 				enemyInfo.refreshStat(this.monster, "hitsdodged");
+
+				enemyExtra.refreshExtra(this.monster, "totalaccuracy");
+				enemyExtra.refreshExtra(this.monster, "totalevasion");
 			}
 		})
 
 		ctx.patch(Enemy, "processDeath").before(function () {
 			enemyInfo.setEmpty("-");
+			enemyExtra.setEmpty("-");
 		})
 	})
 }
@@ -149,6 +181,32 @@ export function setup({onInterfaceReady, settings})
 function psy_formatLargeNumbers(num){
 	let 	value = game.settings.formatNumberSetting == 0 ? formatNumber(num, 3) : formatNumber(num);
 	return 	value;
+}
+
+function psy_addTooltip(target, text){
+	tippy(target, {
+		placement: 	'bottom',
+		content: 	text,
+		arrow: 		true,
+		duration: 	0
+	});
+}
+
+function psy_generateSettings(settingsList, section){
+	for(const [key, setting] of Object.entries(settingsList)){
+		switch(setting.type){
+			case 'switch':
+				section.add({
+					type	: setting.type,
+					name	: setting.title,
+					label	: setting.label,
+					hint	: setting.hint,
+					default	: true
+				});
+				break;
+			// TODO - Handle other kind of settings
+		}
+	}
 }
 
 // Components
@@ -161,6 +219,9 @@ function PsyEnemyInfoStats(props){
 			for(const [stat, content] of Object.entries(this.stats)){
 				this.refreshStat(monster, stat);
 			}
+		},
+		updateSettings(settings){
+			this.settings = settings;
 		},
 		setEmpty(placeholder){
 			for(const [stat, content] of Object.entries(this.stats)){
@@ -176,47 +237,59 @@ function PsyEnemyInfoStats(props){
 		},
 		addImgTooltip(){
 			for(const [stat, content] of Object.entries(this.stats)){
-				this.addTooltip('#psy-img-' + content.title, content.label);
+				psy_addTooltip('#psy-img-' + content.title, content.label);
 			}
-		},
-		addTooltip(target, text){
-			tippy(target, {
-				placement: 	'bottom',
-				content: 	text,
-				arrow: 		true,
-				duration: 	0
-			});
 		}
 	}
 }
 
+function PsyEnemyInfoExtras(props){
+	return{
+		$template	: "#psy-enemyextras",
+		extras 		: props.extras,
+		settings 	: props.settings,
+		refresh(monster){
+			for(const [extra, content] of Object.entries(this.extras)){
+				this.refreshExtra(monster, extra);
+			}
+		},
+		updateSettings(settings){
+			this.settings = settings;
+		},
+		setEmpty(placeholder){
+			for(const [extra, content] of Object.entries(this.extras)){
+				content.value = placeholder;
+			}
+		},
+		refreshExtra(monster, extra){
+			this.extras[extra].value = psy_formatLargeNumbers(this.getValueForextra(monster, this.extras[extra].title));
+		},
+		getValueForextra(monster, extraId){
+			var extraValue = '-';
 
-// Single Stat Component
-// TODO Find a way to nest multiple of this in the enemy info container
-// function PsyEnemyInfoStat(props){
-// 	return{
-// 		$template: 	"#psy-enemystat",
-// 		divId: 		"psy-" + props.statId,
-// 		statId: 	props.statId,
-// 		value: 		props.statValue,
-// 		imgAttrs: 	props.imgAttrs,
-// 		refreshValue(monster){
-// 			this.value = psy_formatLargeNumbers(this.getValueForStat(monster, this.statId));
-// 		},
-// 		addImgTooltip(text){
-// 			this.addTooltip(this.$ref.psyStatImg, text);
-// 		},
-// 		getValueForStat(monster, statId){
-// 			var 	statValue = isNaN(game.stats.Monsters.getTracker(monster).get(statId)) ? 0 : game.stats.Monsters.getTracker(monster).get(statId);
-// 			return 	statValue
-// 		},
-// 		addTooltip(target, text){
-// 			tippy(target, {
-// 				placement: 	'bottom',
-// 				content: 	text,
-// 				arrow: 		true,
-// 				duration: 	0
-// 			});
-// 		}
-// 	}
-// }
+			switch (extraId) {
+				case "totalaccuracy":
+					extraValue = (this.getStatValueOrZero(monster, 5) / (this.getStatValueOrZero(monster, 5) + this.getStatValueOrZero(monster, 7))) * 100;
+					break;
+				case "totalevasion":
+					extraValue = (this.getStatValueOrZero(monster, 6) / (this.getStatValueOrZero(monster, 4) + this.getStatValueOrZero(monster, 6))) * 100;
+					break;
+				case "kdratio":
+					extraValue = (this.getStatValueOrZero(monster, 2) / (this.getStatValueOrZero(monster, 2) + this.getStatValueOrZero(monster, 3))) * 100;
+					break;
+			}
+
+			extraValue = isNaN(extraValue) ? 0 : formatNumber(extraValue);
+
+			return 	(extraValue + "%");
+		},
+		getStatValueOrZero(monster, stat){
+			return isNaN(game.stats.Monsters.getTracker(monster).get(stat)) ? 0 : game.stats.Monsters.getTracker(monster).get(stat);
+		},
+		addImgTooltip(){
+			for(const [extra, content] of Object.entries(this.extras)){
+				psy_addTooltip('#psy-img-' + content.title, content.label);
+			}
+		}
+	}
+}

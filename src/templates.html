@@ -2,8 +2,7 @@
   <div style="position:absolute;top:-4px;right:-6px" id="psy-enemy-info">
     <div class="combat-stats-table font-size-sm" style="align-items:end">
       <div v-for="stat in stats">
-        <!-- TODO - Dynamically hide with v-show on setting change - Some magic needs to happen -->
-        <div :id="'psy-' + stat.title" v-if="settings.get(stat.title)">
+        <div :id="'psy-' + stat.title" v-show="settings.get(stat.title)">
           <div>
             <small>{{ stat.value }}</small>
             <span><img :id="'psy-img-' + stat.title" class='skill-icon-xxs' :src="stat.resource"></span>
@@ -14,15 +13,15 @@
   </div>
 </template>
 
-<!-- TODO - Dynamically populate in info panel
-<template id="psy-enemystat">
-  <div :id="divId">
-    <small>
-      {{ value }}
-    </small>
-    <span>
-      <img v-bind="imgAttrs" ref="psyStatImg">
-    </span>
+<template id="psy-enemyextras">
+  <div class="font-size-lg" style="display:flex;flex-direction:row;justify-content:space-evenly">
+    <div v-for="extra in extras">
+      <div :id="'psy-' + extra.title" v-show="settings.get(extra.title)">
+        <div style="display:flex;flex-direction:row;align-items:center;">
+          <span><img :id="'psy-img-' + extra.title" class='skill-icon-xs' :src="extra.resource"></span>
+          <small>{{ extra.value }}</small>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
--->
