@@ -1,0 +1,6 @@
+{
+		"namespace": "psy_enemyInfo",
+		"icon": "assets/icon.png",
+		"setup": "src/setup.mjs",
+		"load": ["assets/style.css", "src/templates.html"]
+}

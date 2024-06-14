@@ -1,0 +1,28 @@
+<template id="psy-enemystats">
+  <div style="position:absolute;top:-4px;right:-6px" id="psy-enemy-info">
+    <div class="combat-stats-table font-size-sm" style="align-items:end">
+      <div v-for="stat in stats">
+        <!-- TODO - Dynamically hide with v-show on setting change - Some magic needs to happen -->
+        <div :id="'psy-' + stat.title" v-if="settings.get(stat.title)">
+          <div>
+            <small>{{ stat.value }}</small>
+            <span><img :id="'psy-img-' + stat.title" class='skill-icon-xxs' :src="stat.resource"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- TODO - Dynamically populate in info panel
+<template id="psy-enemystat">
+  <div :id="divId">
+    <small>
+      {{ value }}
+    </small>
+    <span>
+      <img v-bind="imgAttrs" ref="psyStatImg">
+    </span>
+  </div>
+</template>
+-->
