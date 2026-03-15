@@ -3,9 +3,9 @@
 
 | 💾 Downloads | 👤 Subscribers | 👍 Positive | 👎 Negative | % Positive | Rating |
 |------------|-------------|------------|------------|------------|--------|
-| 1239 | 373 | 10 | 0 | 100 | Very Positive |
+| 1246 | 375 | 10 | 0 | 100 | Very Positive |
 
-_Last updated: 2026-03-08 01:59 UTC_
+_Last updated: 2026-03-15 02:11 UTC_
 <!-- MODIO:END -->
 
 ### Melvor Enemy Info
